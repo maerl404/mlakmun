@@ -1,1 +1,267 @@
+# GitHub Link: https://github.com/maerl404/Acenet-
+# Part 1 - Initial Setup
+# All the days of the week, in order
+days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
+# Habits start out empty. Each habit will get its own dictionary of days later,
+# like {'Drink Water': {'Monday': False, 'Tuesday': False, ...}}
+habits = {}
+
+# Every day gets its own empty dictionary to hold that day's tasks,
+# like {'Monday': {'Pay bills': False}, 'Tuesday': {}, ...}
+tasks = {day: {} for day in days}
+
+
+# Add Tasks and Habits
+def add_task():
+    # Ask which day the task belongs to and clean up the typing
+    # (so "  monDAY " still works)
+    day = input("Which day do you want to add the task to? ").strip().title()
+
+    # Stop right away if that isn't a real day
+    if day not in days:
+        print(f"Sorry, '{day}' isn't a valid day. Try one of: {', '.join(days)}.")
+        return
+
+    task = input("What's the task? ").strip()
+
+    # No point saving a blank task
+    if task == "":
+        print("The task name can't be empty.")
+        return
+
+    # Don't add the same task twice on the same day
+    if task in tasks[day]:
+        print(f"'{task}' is already on your list for {day}.")
+        return
+
+    # False means it's not done yet
+    tasks[day][task] = False
+    print(f"Got it! '{task}' has been added to {day}.")
+
+
+def add_habit():
+    habit = input("What habit do you want to track (e.g., Drink Water)? ").strip().title()
+
+    if habit == "":
+        print("The habit name can't be empty.")
+        return
+
+    # Let the user know if they're already tracking this one
+    if habit in habits:
+        print(f"You're already tracking '{habit}'.")
+        return
+
+    # A habit repeats every day, so give it all 7 days, all not done yet
+    habits[habit] = {day: False for day in days}
+    print(f"Nice! '{habit}' is now being tracked for the whole week.")
+
+
+# Testing - uncomment a line, run the cell, then comment it out again
+# add_task()
+# add_habit()
+
+
+# Marking Tasks and Habits as Complete
+import datetime
+
+def mark_task_complete():
+    # First, collect every task that isn't done yet, along with its day
+    incomplete = []
+    for day, day_tasks in tasks.items():
+        for task, done in day_tasks.items():
+            if not done:
+                incomplete.append((task, day))
+
+    # Nothing left to do, so we can stop here
+    if not incomplete:
+        print("All tasks completed!")
+        return
+
+    print("\nTasks still to do:")
+    for task, day in incomplete:
+        print(f"  - {task} ({day})")
+
+    name = input("\nWhich task did you finish? ").strip()
+
+    # Look through every day for a task with that name
+    found = False
+    for day, day_tasks in tasks.items():
+        for task, done in day_tasks.items():
+            # Ignore capital letters so "pay bills" matches "Pay bills"
+            if task.lower() == name.lower() and not done:
+                tasks[day][task] = True
+                found = True
+
+                # BONUS: compare the task's day to today's day
+                # (a smaller position in the list means an earlier day)
+                today = datetime.datetime.now().strftime("%A")
+                if days.index(day) < days.index(today):
+                    print(f"'{task}' marked as complete. Better late than never!")
+                else:
+                    print(f"'{task}' marked as complete. Great job!")
+                break
+        if found:
+            break
+
+    if not found:
+        print(f"Hmm, I couldn't find a task called '{name}' in your to-do list. "
+              "Check the spelling and try again.")
+
+
+def mark_habit_complete():
+    day = input("Which day did you do it? ").strip().title()
+    if day not in days:
+        print(f"Sorry, '{day}' isn't a valid day. Try one of: {', '.join(days)}.")
+        return
+
+    name = input("Which habit? ").strip().title()
+    if name not in habits:
+        print(f"You aren't tracking a habit called '{name}'. Add it first with add_habit().")
+        return
+
+    habits[name][day] = True
+    print(f"'{name}' marked as done for {day}. Keep it up!")
+
+
+# Testing - uncomment a line, run the cell, then comment it out again
+# mark_task_complete()
+# mark_habit_complete()
+
+#Part 2
+# Removing Tasks and Habits
+
+def remove_task():
+    day = input("Which day is the task on? ").strip().title()
+
+    # Make sure it's a real day before touching anything
+    if day not in days:
+        print(f"Sorry, '{day}' isn't a valid day. Try one of: {', '.join(days)}.")
+        return
+
+    # An empty dictionary counts as False so this catches a day with no tasks
+    if not tasks[day]:
+        print(f"You don't have any tasks on {day}.")
+        return
+
+    print(f"\nTasks for {day}:")
+    for task in tasks[day]:
+        print(f"  - {task}")
+
+    name = input("\nWhich task do you want to remove? ").strip()
+
+    # Tasks are saved exactly how they were typed, so match them
+    # ignoring capital letters instead of forcing .title()
+    for task in tasks[day]:
+        if task.lower() == name.lower():
+            del tasks[day][task]
+            print(f"Done! '{task}' was removed from {day}.")
+            return
+
+    print(f"Hmm, '{name}' isn't on your {day} list. Check the spelling and try again.")
+
+
+def remove_habit():
+    # Nothing to remove if there are no habits
+    if not habits:
+        print("You aren't tracking any habits yet.")
+        return
+
+    print("\nHabits you're tracking:")
+    for habit in habits:
+        print(f"  - {habit}")
+
+    name = input("\nWhich habit do you want to remove? ").strip().title()
+
+    if name not in habits:
+        print(f"Hmm, you aren't tracking a habit called '{name}'. Check the spelling and try again.")
+        return
+
+    del habits[name]
+    print(f"Done! The habit '{name}' was removed.")
+
+
+# Testing - uncomment a line, run the cell, then comment it out again
+# remove_task()
+# remove_habit()
+
+
+# Generating Weekly and Daily Reports
+
+def weekly_report():
+    print("\n===== WEEKLY REPORT =====")
+
+    #Habits
+    print("\nHabits:")
+    if not habits:
+        print("  You aren't tracking any habits yet.")
+    else:
+        for habit, habit_days in habits.items():
+            # Add 1 for every day that is marked True
+            days_done = sum(1 for done in habit_days.values() if done)
+            print(f"  {habit}: {days_done}/7 days complete")
+
+    #Tasks
+    completed = []
+    not_completed = []
+    for day, day_tasks in tasks.items():
+        for task, done in day_tasks.items():
+            if done:
+                completed.append(f"{task} ({day})")
+            else:
+                not_completed.append(f"{task} ({day})")
+
+    print("\nTasks:")
+    if not completed and not not_completed:
+        print("  You don't have any tasks yet.")
+    else:
+        print("  ✅ Completed:")
+        if completed:
+            for item in completed:
+                print(f"     - {item}")
+        else:
+            print("     (none yet)")
+
+        print("  ❌ Not completed:")
+        if not_completed:
+            for item in not_completed:
+                print(f"     - {item}")
+        else:
+            print("     (none, nice work!)")
+
+    print("\n=========================")
+
+
+def daily_report():
+    day = input("Which day do you want a report for? ").strip().title()
+
+    if day not in days:
+        print(f"Sorry, '{day}' isn't a valid day. Try one of: {', '.join(days)}.")
+        return
+
+    print(f"\n===== REPORT FOR {day.upper()} =====")
+
+    #Tasks for that day
+    print("\nTasks:")
+    if not tasks[day]:
+        print("  No tasks for this day.")
+    else:
+        for task, done in tasks[day].items():
+            symbol = "✅" if done else "❌"
+            print(f"  {symbol} {task}")
+
+    #Habits on that day 
+    print("\nHabits:")
+    if not habits:
+        print("  You aren't tracking any habits yet.")
+    else:
+        for habit, habit_days in habits.items():
+            symbol = "✅" if habit_days[day] else "❌"
+            print(f"  {symbol} {habit}")
+
+    print("\n=============================")
+
+
+# Testing - uncomment a line, run the cell, then comment it out again
+# weekly_report()
+# daily_report()
