@@ -20,7 +20,7 @@ def report_week(habits, tasks, file_name):
             days_done = sum(1 for done in habit_days.values() if done)
             print(f"  {habit}: {days_done}/7 days complete")
 
-    # Tasks: split into done and not done, with the day next to each
+    # Tasks: split into done and not done with the day next to each
     completed = []
     not_completed = []
     for day in days:
@@ -60,7 +60,7 @@ file_list = [
     'dictionaries_10.txt'
 ]
 
-# Read each file, turn the text into Python dictionaries, and run the report
+# Read each file, turn the text into Python dictionaries and run the report
 for file_name in file_list:
     with open(file_name) as f:
         content = f.read()
