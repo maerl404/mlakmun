@@ -5,7 +5,7 @@
 #SBATCH --mem=1G
 # If the cluster asks for an account, add: #SBATCH --account=YOUR_ACCOUNT
 
-# Load Python (run "module avail python" to see the exact versions)
+# Load Python
 module load python
 
 # Make a virtual environment on the node and install asteval
@@ -14,5 +14,5 @@ source $SLURM_TMPDIR/env/bin/activate
 pip install --no-index --upgrade pip
 pip install --no-index asteval
 
-# Run the script (use your renamed file)
+# Run the script
 python Project-HPC-mlakmun.py
