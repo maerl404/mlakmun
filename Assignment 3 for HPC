@@ -1,0 +1,68 @@
+# asteval lets us read Python-style dictionaries from a text file on the cluster
+# (on a regular computer the built-in "ast" library does the same job)
+from asteval import Interpreter
+aeval = Interpreter()
+
+days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+
+
+# Prints the weekly report for one data file
+# Habits come first because the loop at the bottom passes them in that order
+def report_week(habits, tasks, file_name):
+    print(f"\n===== WEEKLY REPORT: {file_name} =====")
+
+    # Habits: count how many days are marked True
+    print("\nHabits:")
+    if not habits:
+        print("  No habits in this file.")
+    else:
+        for habit, habit_days in habits.items():
+            days_done = sum(1 for done in habit_days.values() if done)
+            print(f"  {habit}: {days_done}/7 days complete")
+
+    # Tasks: split into done and not done, with the day next to each
+    completed = []
+    not_completed = []
+    for day in days:
+        for task, done in tasks.get(day, {}).items():
+            if done:
+                completed.append(f"{task} ({day})")
+            else:
+                not_completed.append(f"{task} ({day})")
+
+    print("\nTasks:")
+    if not completed and not not_completed:
+        print("  No tasks in this file.")
+    else:
+        print("  Completed:")
+        if completed:
+            for item in completed:
+                print(f"     - {item}")
+        else:
+            print("     (none)")
+
+        print("  Not completed:")
+        if not_completed:
+            for item in not_completed:
+                print(f"     - {item}")
+        else:
+            print("     (none)")
+
+    print("\n=========================")
+
+
+# Data files to process (each holds a list: habits first, then tasks)
+# Keep them in the same folder as this script
+file_list = [
+    'dictionaries_1.txt', 'dictionaries_2.txt', 'dictionaries_3.txt',
+    'dictionaries_4.txt', 'dictionaries_5.txt', 'dictionaries_6.txt',
+    'dictionaries_7.txt', 'dictionaries_8.txt', 'dictionaries_9.txt',
+    'dictionaries_10.txt'
+]
+
+# Read each file, turn the text into Python dictionaries, and run the report
+for file_name in file_list:
+    with open(file_name) as f:
+        content = f.read()
+        data = aeval(content)
+        report_week(data[0], data[1], file_name)
