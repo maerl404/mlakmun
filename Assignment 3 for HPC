@@ -1,3 +1,4 @@
+# GitHub Link: https://github.com/maerl404/Acenet-
 # asteval lets us read Python-style dictionaries from a text file on the cluster
 # (on a regular computer the built-in "ast" library does the same job)
 from asteval import Interpreter
