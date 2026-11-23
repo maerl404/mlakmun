@@ -1,5 +1,6 @@
 # GitHub Link: https://github.com/maerl404/Acenet-
 # Part 1 - Setup
+
 # Days of the week, in order
 days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
