@@ -1,6 +1,5 @@
 # GitHub Link: https://github.com/maerl404/Acenet-
 # Part 1 - Setup
-
 # Days of the week, in order
 days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 
@@ -14,7 +13,7 @@ def add_task():
     # strip + title so " monDAY " still works
     day = input("Which day do you want to add the task to? ").strip().title()
 
-    # Not a real day? Show the options and stop
+    # If it isn't a real day, show the options and stop
     if day not in days:
         print(f"Sorry, '{day}' isn't a valid day. Try one of: {', '.join(days)}.")
         return
@@ -51,7 +50,6 @@ def add_habit():
     # A habit covers the whole week, so all 7 days start as not done
     habits[habit] = {day: False for day in days}
     print(f"Nice! '{habit}' is now being tracked for the whole week.")
-
 
 # Test calls: uncomment one, run it, then comment it out again
 # add_task()
@@ -101,7 +99,6 @@ def mark_task_complete():
         print(f"Hmm, I couldn't find a task called '{name}' in your to-do list. "
               "Check the spelling and try again.")
 
-
 def mark_habit_complete():
     day = input("Which day did you do it? ").strip().title()
     if day not in days:
@@ -120,7 +117,6 @@ def mark_habit_complete():
 
     habits[name][day] = True
     print(f"'{name}' marked as done for {day}. Keep it up!")
-
 
 # Test calls: uncomment one, run it, then comment it out again
 # mark_task_complete()
@@ -155,7 +151,6 @@ def remove_task():
 
     print(f"Hmm, '{name}' isn't on your {day} list. Check the spelling and try again.")
 
-
 def remove_habit():
     # No habits, nothing to remove
     if not habits:
@@ -175,8 +170,7 @@ def remove_habit():
     del habits[name]
     print(f"Done! The habit '{name}' was removed.")
 
-
-# Test calls: uncomment one, run it, then comment it out again
+# Test calls: uncomment one, run it and then comment it out again
 # remove_task()
 # remove_habit()
 # Weekly and daily reports
@@ -223,7 +217,6 @@ def weekly_report():
 
     print("\n=========================")
 
-
 def daily_report():
     day = input("Which day do you want a report for? ").strip().title()
 
@@ -253,8 +246,7 @@ def daily_report():
 
     print("\n=============================")
 
-
-# Test calls: uncomment one, run it, then comment it out again
+# Test calls: uncomment one, run it and then comment it out again
 # weekly_report()
 # daily_report()
 # Main menu
@@ -273,7 +265,7 @@ def main():
         choice = input("Choose an option (1-5): ").strip()
 
         if choice == '1':
-            sub = input("Add a (T)ask or a (H)abit? ").strip().lower()
+            sub = input("Add a (T)ask or a (H)abit? Enter T for Task and H for Habit.").strip().lower()
             if sub in ('t', 'task'):
                 add_task()
             elif sub in ('h', 'habit'):
@@ -282,7 +274,7 @@ def main():
                 print("Invalid choice. Please enter T or H.")
 
         elif choice == '2':
-            sub = input("Mark a (T)ask or a (H)abit as complete? ").strip().lower()
+            sub = input("Mark a (T)ask or a (H)abit as complete? Enter T for Task and H for Habit.").strip().lower()
             if sub in ('t', 'task'):
                 mark_task_complete()
             elif sub in ('h', 'habit'):
@@ -291,7 +283,7 @@ def main():
                 print("Invalid choice. Please enter T or H.")
 
         elif choice == '3':
-            sub = input("Remove a (T)ask or a (H)abit? ").strip().lower()
+            sub = input("Remove a (T)ask or a (H)abit? Enter T for Task and H for Habit.").strip().lower()
             if sub in ('t', 'task'):
                 remove_task()
             elif sub in ('h', 'habit'):
@@ -300,7 +292,7 @@ def main():
                 print("Invalid choice. Please enter T or H.")
 
         elif choice == '4':
-            sub = input("Do you want a (W)eekly or (D)aily report? ").strip().lower()
+            sub = input("Do you want a (W)eekly or (D)aily report? Enter W for Weekly and D for Daily. ").strip().lower()
             if sub in ('w', 'weekly'):
                 weekly_report()
             elif sub in ('d', 'daily'):
@@ -314,6 +306,5 @@ def main():
 
         else:
             print("Invalid option. Please enter a number from 1 to 5.")
-
 
 main()
